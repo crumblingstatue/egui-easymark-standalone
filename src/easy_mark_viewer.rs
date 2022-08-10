@@ -2,11 +2,15 @@ use super::easy_mark_parser as easy_mark;
 use egui::*;
 
 /// Parse and display a VERY simple and small subset of Markdown.
-pub fn easy_mark(ui: &mut Ui, easy_mark: &str) {
-    easy_mark_it(ui, easy_mark::Parser::new(easy_mark));
+///
+/// Returns `Some(url)` if a link was clicked.
+///
+/// This allows custom handling of links.
+pub fn easy_mark<'em>(ui: &mut Ui, easy_mark: &'em str) -> Option<&'em str> {
+    easy_mark_it(ui, easy_mark::Parser::new(easy_mark))
 }
 
-/// Returns `Some(url)` if a link was clicked
+/// Returns `Some(url)` if a link was clicked.
 ///
 /// This allows custom handling of links.
 pub fn easy_mark_it<'em>(
