@@ -74,7 +74,7 @@ impl EasyMarkEditor {
             let mut layouter = |ui: &egui::Ui, easymark: &str, wrap_width: f32| {
                 let mut layout_job = highlighter.highlight(ui.style(), easymark);
                 layout_job.wrap.max_width = wrap_width;
-                ui.fonts().layout_job(layout_job)
+                ui.fonts(|f| f.layout_job(layout_job))
             };
 
             ui.add(
@@ -112,10 +112,7 @@ fn nested_hotkeys_ui(ui: &mut egui::Ui) {
 
 fn shortcuts(ui: &Ui, code: &mut dyn TextBuffer, ccursor_range: &mut CCursorRange) -> bool {
     let mut any_change = false;
-    if ui
-        .input_mut()
-        .consume_key(egui::Modifiers::ALT | egui::Modifiers::SHIFT, Key::E)
-    {
+    if ui.input_mut(|inp| inp.consume_key(egui::Modifiers::ALT | egui::Modifiers::SHIFT, Key::E)) {
         // This is a placeholder till we can indent the active line
         any_change = true;
         let [primary, _secondary] = ccursor_range.sorted();
@@ -133,7 +130,7 @@ fn shortcuts(ui: &Ui, code: &mut dyn TextBuffer, ccursor_range: &mut CCursorRang
         (egui::Modifiers::ALT | egui::Modifiers::SHIFT, Key::Q, "~"), // ~strikethrough~
         (egui::Modifiers::ALT | egui::Modifiers::SHIFT, Key::W, "_"), // _underline_
     ] {
-        if ui.input_mut().consume_key(modifier, key) {
+        if ui.input_mut(|inp| inp.consume_key(modifier, key)) {
             any_change = true;
             toggle_surrounding(code, ccursor_range, surrounding);
         };
